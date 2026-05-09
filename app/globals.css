@@ -42,6 +42,13 @@
     position: relative;
     z-index: 2;
   }
+
+  /* When mobile drawer is open, hide WebGL canvases — they render on a
+     separate GPU compositor layer on mobile browsers and bleed through
+     translucent overlays regardless of z-index/stacking context. */
+  html.nav-open canvas {
+    visibility: hidden;
+  }
 }
 
 @layer components {

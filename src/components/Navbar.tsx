@@ -3,6 +3,7 @@
 import Link from "next/link";
 import MobileNav from "./MobileNav";
 import Logo from "./Logo";
+import Magnetic from "./Magnetic";
 import { useEnquiry } from "./EnquiryModal";
 
 export default function Navbar() {
@@ -32,13 +33,15 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3 justify-self-end">
-          <button
-            type="button"
-            onClick={() => enquiry.open({ topic: "Quote" })}
-            className="bg-industrial-yellow text-deep-black text-[11px] md:text-[12px] font-semibold tracking-[0.18em] uppercase py-3 px-4 lg:px-6 hover:bg-white-smoke transition-colors hidden md:block"
-          >
-            Request Quote
-          </button>
+          <Magnetic strength={6} className="hidden md:inline-block">
+            <button
+              type="button"
+              onClick={() => enquiry.open({ topic: "Quote" })}
+              className="bg-industrial-yellow text-deep-black text-[11px] md:text-[12px] font-semibold tracking-[0.18em] uppercase py-3 px-4 lg:px-6 hover:bg-white-smoke transition-colors"
+            >
+              Request Quote
+            </button>
+          </Magnetic>
           <MobileNav />
         </div>
       </div>

@@ -19,8 +19,10 @@ export default function MobileNav() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    document.documentElement.classList.toggle("nav-open", open);
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.classList.remove("nav-open");
     };
   }, [open]);
 
@@ -41,7 +43,8 @@ export default function MobileNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] bg-deep-black/70 backdrop-blur-sm md:hidden"
+            style={{ transform: "translateZ(0)" }}
+            className="fixed inset-0 z-[150] isolate bg-deep-black/95 backdrop-blur-md md:hidden"
             onClick={() => setOpen(false)}
           >
             <motion.aside
@@ -50,7 +53,8 @@ export default function MobileNav() {
               exit={{ x: "100%" }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="absolute right-0 top-0 h-full w-[82%] max-w-sm bg-graphite border-l border-steel/20 flex flex-col"
+              style={{ backgroundColor: "#141414", transform: "translateZ(0)" }}
+              className="absolute right-0 top-0 h-full w-[82%] max-w-sm border-l border-steel/20 flex flex-col shadow-2xl"
             >
               <div className="flex items-center justify-between h-16 px-6 border-b border-steel/15">
                 <Logo size="sm" href={null} />
@@ -65,7 +69,7 @@ export default function MobileNav() {
 
               <nav className="flex-1 px-6 py-8 flex flex-col">
                 <div className="text-[10px] tracking-[0.25em] text-white-smoke/40 uppercase mb-6">
-                  Navigation
+                  
                 </div>
                 <ul className="space-y-1">
                   {LINKS.map((l, i) => (

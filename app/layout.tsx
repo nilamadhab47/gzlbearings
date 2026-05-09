@@ -3,6 +3,7 @@ import "./globals.css";
 import { siteConfig } from "@/src/lib/siteConfig";
 import EnquiryProvider from "@/src/components/EnquiryModal";
 import WelcomeModal from "@/src/components/WelcomeModal";
+import MouseSpotlight from "@/src/components/MouseSpotlight";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -108,6 +109,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <EnquiryProvider>
+          <MouseSpotlight />
           {children}
           <WelcomeModal />
         </EnquiryProvider>

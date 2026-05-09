@@ -21,6 +21,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Link from "next/link";
 import { useEnquiry } from "./components/EnquiryModal";
+import Magnetic from "./components/Magnetic";
 
 // 3D bearing — client-only, no SSR (uses canvas/WebGL)
 const BearingHero = dynamic(() => import("./components/BearingHero"), {
@@ -154,20 +155,24 @@ function HeroSection() {
               transition={{ delay: 0.45, duration: 0.5 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
-              <button
-                type="button"
-                onClick={() => enquiry.open({ topic: "Quote" })}
-                className="group bg-industrial-yellow text-deep-black text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 flex items-center justify-center sm:justify-start gap-3 hover:bg-white-smoke transition-colors"
-              >
-                Request a Quote
-                <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <Link
-                href="/products"
-                className="border border-steel/50 text-white-smoke text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 hover:border-industrial-yellow hover:text-industrial-yellow transition-colors text-center"
-              >
-                Explore Products
-              </Link>
+              <Magnetic strength={10}>
+                <button
+                  type="button"
+                  onClick={() => enquiry.open({ topic: "Quote" })}
+                  className="group bg-industrial-yellow text-deep-black text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 flex items-center justify-center sm:justify-start gap-3 hover:bg-white-smoke transition-colors w-full sm:w-auto"
+                >
+                  Request a Quote
+                  <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Magnetic>
+              <Magnetic strength={8}>
+                <Link
+                  href="/products"
+                  className="border border-steel/50 text-white-smoke text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 hover:border-industrial-yellow hover:text-industrial-yellow transition-colors text-center inline-flex items-center justify-center w-full sm:w-auto"
+                >
+                  Explore Products
+                </Link>
+              </Magnetic>
             </motion.div>
           </motion.div>
 
