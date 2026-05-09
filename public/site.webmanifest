@@ -1,0 +1,17 @@
+{
+  "name": "GLZ Bearings",
+  "short_name": "GLZ",
+  "description": "Precision industrial bearings engineered for the world's most demanding environments.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0B0B",
+  "theme_color": "#0B0B0B",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
