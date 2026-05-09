@@ -4,6 +4,7 @@ import { siteConfig } from "@/src/lib/siteConfig";
 import EnquiryProvider from "@/src/components/EnquiryModal";
 import WelcomeModal from "@/src/components/WelcomeModal";
 import MouseSpotlight from "@/src/components/MouseSpotlight";
+import CustomCursor from "@/src/components/CustomCursor";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -110,6 +111,7 @@ export default function RootLayout({
       <body>
         <EnquiryProvider>
           <MouseSpotlight />
+          <CustomCursor />
           {children}
           <WelcomeModal />
         </EnquiryProvider>

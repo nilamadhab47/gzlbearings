@@ -49,6 +49,12 @@
   html.nav-open canvas {
     visibility: hidden;
   }
+
+  /* Hide native cursor when custom cursor is active (desktop, non-reduced-motion). */
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: none !important;
+  }
 }
 
 @layer components {

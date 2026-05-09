@@ -22,6 +22,7 @@ import Footer from "./components/Footer";
 import Link from "next/link";
 import { useEnquiry } from "./components/EnquiryModal";
 import Magnetic from "./components/Magnetic";
+import WorldNetwork from "./components/WorldNetwork";
 
 // 3D bearing — client-only, no SSR (uses canvas/WebGL)
 const BearingHero = dynamic(() => import("./components/BearingHero"), {
@@ -530,13 +531,6 @@ function ValuesSection() {
 /*  NETWORK MAP — calmer, generic stat copy                                    */
 /* -------------------------------------------------------------------------- */
 function NetworkSection() {
-  const nodes = [
-    { t: "32%", l: "20%", label: "AMERICAS" },
-    { t: "38%", l: "48%", label: "EMEA HQ", primary: true },
-    { t: "40%", l: "70%", label: "ASIA-PACIFIC" },
-    { t: "62%", l: "78%", label: "OCEANIA" },
-  ];
-
   return (
     <section className="border-y border-steel/15 bg-graphite/20 py-16 md:py-24 lg:py-28">
       <div className="max-w-[1440px] 3xl:max-w-site-xl mx-auto px-5 sm:px-6 md:px-10">
@@ -558,33 +552,9 @@ function NetworkSection() {
           </div>
         </Reveal>
 
-        <div className="relative aspect-[3/2] md:aspect-[2/1] border border-steel/20 overflow-hidden bg-deep-black">
-          <img
-            src={IMAGES.map}
-            alt="Global network"
-            className="absolute inset-0 w-full h-full object-cover opacity-20"
-          />
-
-          {nodes.map((n, i) => (
-            <div
-              key={i}
-              style={{ top: n.t, left: n.l }}
-              className="absolute -translate-x-1/2 -translate-y-1/2"
-            >
-              <span
-                className={`relative flex ${
-                  n.primary ? "h-2.5 w-2.5" : "h-2 w-2"
-                }`}
-              >
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-industrial-yellow/60 opacity-60" />
-                <span className="relative inline-flex h-full w-full bg-industrial-yellow" />
-              </span>
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 hidden md:block text-[10px] tracking-[0.2em] text-white-smoke/60 whitespace-nowrap">
-                {n.label}
-              </div>
-            </div>
-          ))}
-        </div>
+        <Reveal>
+          <WorldNetwork />
+        </Reveal>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-steel/15 mt-8 md:mt-12">
           {[
