@@ -200,22 +200,13 @@ function Reveal({
 }
 
 /* -------------------------------------------------------------------------- */
-/*  HERO — 2-col with vertical 3D bearing, parallax on scroll                  */
+/*  HERO — pure CSS entry animations (zero JS animation library cost)          */
 /* -------------------------------------------------------------------------- */
 function HeroSection() {
   const enquiry = useEnquiry();
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-  const yCopy = useTransform(scrollYProgress, [0, 1], [0, -40]);
-  const yBearing = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   return (
     <section
-      ref={ref}
       className="relative min-h-[80vh] md:min-h-[88vh] lg:min-h-[92vh] flex items-center overflow-hidden pt-[72px]"
     >
       <div className="absolute inset-0 z-0">
@@ -226,89 +217,54 @@ function HeroSection() {
       <div className="relative z-10 w-full max-w-[1440px] 3xl:max-w-site-xl mx-auto px-5 sm:px-6 md:px-10 py-16 sm:py-20 md:py-24 lg:py-28">
         <div className="grid lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16 items-center">
           {/* Copy */}
-          <motion.div
-            style={{ y: yCopy, opacity: opacityFade }}
-            className="lg:col-span-6 order-2 lg:order-1"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 mb-6 md:mb-8 text-[10px] sm:text-[11px] tracking-[0.25em] text-industrial-yellow/90"
-            >
+          <div className="lg:col-span-6 order-2 lg:order-1">
+            <div className="hero-anim-1 flex items-center gap-3 mb-6 md:mb-8 text-[10px] sm:text-[11px] tracking-[0.25em] text-industrial-yellow/90">
               <span className="w-6 sm:w-8 h-px bg-industrial-yellow/60" />
               PRECISION ENGINEERING
-            </motion.div>
+            </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="font-display text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl 3xl:text-[6rem] uppercase leading-[0.95] tracking-tight mb-6 md:mb-8"
-            >
+            <h1 className="hero-anim-2 font-display text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl 3xl:text-[6rem] uppercase leading-[0.95] tracking-tight mb-6 md:mb-8">
               Turning Trust
               <br />
               <span className="text-industrial-yellow">Into Motion.</span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-sm sm:text-base md:text-lg text-white-smoke/60 max-w-xl mb-8 md:mb-12 leading-relaxed"
-            >
+            <p className="hero-anim-3 text-sm sm:text-base md:text-lg text-white-smoke/60 max-w-xl mb-8 md:mb-12 leading-relaxed">
               Engineering authority in precision bearings. Tight tolerances,
               rigorous quality control, and a global supply network built for
               the world&apos;s most demanding environments.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.45, duration: 0.5 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-            >
-              <Magnetic strength={10}>
-                <button
-                  type="button"
-                  onClick={() => enquiry.open({ topic: "Quote" })}
-                  className="group bg-industrial-yellow text-deep-black text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 flex items-center justify-center sm:justify-start gap-3 hover:bg-white-smoke transition-colors w-full sm:w-auto"
-                >
-                  Request a Quote
-                  <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Magnetic>
+            <div className="hero-anim-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={() => enquiry.open({ topic: "Quote" })}
+                className="group bg-industrial-yellow text-deep-black text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 flex items-center justify-center sm:justify-start gap-3 hover:bg-white-smoke transition-colors w-full sm:w-auto"
+              >
+                Request a Quote
+                <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
 
-              <Magnetic strength={8}>
-                <Link
-                  href="/products"
-                  className="border border-steel/50 text-white-smoke text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 hover:border-industrial-yellow hover:text-industrial-yellow transition-colors text-center inline-flex items-center justify-center w-full sm:w-auto"
-                >
-                  Explore Products
-                </Link>
-              </Magnetic>
-            </motion.div>
-          </motion.div>
+              <Link
+                href="/products"
+                className="border border-steel/50 text-white-smoke text-[12px] font-semibold tracking-[0.18em] uppercase py-4 px-6 sm:px-8 hover:border-industrial-yellow hover:text-industrial-yellow transition-colors text-center inline-flex items-center justify-center w-full sm:w-auto"
+              >
+                Explore Products
+              </Link>
+            </div>
+          </div>
 
           {/* 3D bearing */}
-          <motion.div
-            style={{ y: yBearing }}
-            className="lg:col-span-6 relative order-1 lg:order-2"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.0, delay: 0.2, ease: "easeOut" }}
-              className="relative aspect-square w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[600px] mx-auto"
-            >
+          <div className="lg:col-span-6 relative order-1 lg:order-2">
+            <div className="hero-anim-5 relative aspect-square w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[600px] mx-auto">
               <CornerCrosshair className="top-0 left-0" />
               <CornerCrosshair className="top-0 right-0 rotate-90" />
               <CornerCrosshair className="bottom-0 left-0 -rotate-90" />
               <CornerCrosshair className="bottom-0 right-0 rotate-180" />
 
               <DeferredBearing />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -345,12 +301,7 @@ function IndustryStrip() {
           INDUSTRIES SERVED
         </div>
         <div className="flex-1 overflow-hidden relative">
-          <motion.div
-            initial={{ x: 0 }}
-            animate={{ x: "-50%" }}
-            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-            className="flex gap-8 sm:gap-12 whitespace-nowrap"
-          >
+          <div className="marquee-track flex gap-8 sm:gap-12 whitespace-nowrap">
             {[...items, ...items].map((item, i) => (
               <span
                 key={i}
@@ -359,7 +310,7 @@ function IndustryStrip() {
                 {item}
               </span>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

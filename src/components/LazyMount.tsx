@@ -14,7 +14,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  */
 export default function LazyMount({
   children,
-  rootMargin = "0px 0px",
+  rootMargin = "300px 0px",
   minHeight = "60vh",
   className = "",
 }: {
@@ -30,15 +30,6 @@ export default function LazyMount({
     if (show) return;
     const node = ref.current;
     if (!node) return;
-
-    // Real users: as soon as they scroll, mount all LazyMount instances
-    // so content is ready by the time it enters view. This still keeps
-    // the section un-mounted during the Lighthouse audit (no scroll).
-    const onFirstScroll = () => {
-      setShow(true);
-      window.removeEventListener("scroll", onFirstScroll);
-    };
-    window.addEventListener("scroll", onFirstScroll, { passive: true, once: true });
 
     if (typeof IntersectionObserver === "undefined") {
       setShow(true);
@@ -57,10 +48,7 @@ export default function LazyMount({
       { rootMargin },
     );
     io.observe(node);
-    return () => {
-      io.disconnect();
-      window.removeEventListener("scroll", onFirstScroll);
-    };
+    return () => io.disconnect();
   }, [rootMargin, show]);
 
   return (

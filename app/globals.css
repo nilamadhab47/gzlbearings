@@ -81,3 +81,40 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #444;
 }
+
+/* Hero entry animations — pure CSS so no JS lib runs at startup */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes hero-fade-scale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.hero-anim-1 { animation: hero-fade-up 0.6s ease-out both; }
+.hero-anim-2 { animation: hero-fade-up 0.7s ease-out both; }
+.hero-anim-3 { animation: hero-fade 0.6s ease-out 0.3s both; }
+.hero-anim-4 { animation: hero-fade-up 0.5s ease-out 0.45s both; }
+.hero-anim-5 { animation: hero-fade-scale 1s ease-out 0.2s both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-anim-1, .hero-anim-2, .hero-anim-3, .hero-anim-4, .hero-anim-5 {
+    animation: none;
+  }
+}
+
+/* Industry strip marquee — CSS only */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 50s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
