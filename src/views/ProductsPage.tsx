@@ -5,6 +5,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowForward,
@@ -644,10 +645,13 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
       className="group relative bg-graphite hover:bg-[#1f1f1f] transition-colors flex flex-col"
     >
       <div className="relative aspect-[5/3] bg-deep-black overflow-hidden">
-        <img
+        <Image
           src={product.img}
           alt={product.name}
-          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          loading="lazy"
+          className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700"
         />
         <Crosshair className="top-3 left-3" />
         <Crosshair className="top-3 right-3 rotate-90" />

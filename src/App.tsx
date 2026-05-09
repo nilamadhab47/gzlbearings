@@ -4,8 +4,9 @@
  */
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
 import {
   ArrowForward,
@@ -24,7 +25,8 @@ import { useEnquiry } from "./components/EnquiryModal";
 import Magnetic from "./components/Magnetic";
 import WorldNetwork from "./components/WorldNetwork";
 
-// 3D bearing — client-only, no SSR (uses canvas/WebGL)
+// 3D bearing — client-only, no SSR (uses canvas/WebGL).
+// Lazy-loaded; mounted only after first paint via DeferredBearing wrapper below.
 const BearingHero = dynamic(() => import("./components/BearingHero"), {
   ssr: false,
   loading: () => (
@@ -33,6 +35,86 @@ const BearingHero = dynamic(() => import("./components/BearingHero"), {
     </div>
   ),
 });
+
+/**
+ * Defers WebGL Canvas mount until the browser is idle so the LCP element
+ * (headline) wins the paint race. Falls back to setTimeout when
+ * requestIdleCallback isn't available (Safari).
+ */
+function DeferredBearing() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const w = window as Window &
+      typeof globalThis & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      };
+    const trigger = () => setShow(true);
+    if (typeof w.requestIdleCallback === "function") {
+      w.requestIdleCallback(trigger, { timeout: 1500 });
+    } else {
+      const id = window.setTimeout(trigger, 600);
+      return () => window.clearTimeout(id);
+    }
+  }, []);
+  if (!show) {
+    return <BearingPlaceholder />;
+  }
+  return <BearingHero />;
+}
+
+/**
+ * Lightweight CSS-only placeholder shown while the WebGL Canvas
+ * is deferred. ~0 cost, hints at the bearing geometry, and gives
+ * the page a polished "loading" feel rather than a black square.
+ */
+function BearingPlaceholder() {
+  return (
+    <div className="relative w-full h-full flex items-center justify-center">
+      <div
+        className="relative aspect-square w-[78%] rounded-full border border-steel/25"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(244,196,0,0.05), transparent 55%)",
+        }}
+      >
+        {/* outer ring tick marks (suggest ball bearings) */}
+        <div className="absolute inset-0 animate-[spin_14s_linear_infinite]">
+          {Array.from({ length: 12 }).map((_, i) => {
+            const angle = (i / 12) * 360;
+            return (
+              <span
+                key={i}
+                className="absolute left-1/2 top-1/2 w-1.5 h-1.5 rounded-full bg-white-smoke/30"
+                style={{
+                  transform: `rotate(${angle}deg) translateY(-46%) translateX(-50%)`,
+                  transformOrigin: "0 0",
+                }}
+              />
+            );
+          })}
+        </div>
+        {/* inner ring */}
+        <div className="absolute inset-[22%] rounded-full border border-steel/20" />
+        {/* center hub */}
+        <div className="absolute inset-[40%] rounded-full bg-graphite/60 border border-industrial-yellow/40" />
+        {/* sweeping highlight */}
+        <div
+          className="absolute inset-0 rounded-full animate-[spin_3.5s_linear_infinite] pointer-events-none"
+          style={{
+            background:
+              "conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(244,196,0,0.35) 350deg, transparent 360deg)",
+            WebkitMask:
+              "radial-gradient(circle at 50% 50%, transparent 38%, black 39%, black 50%, transparent 51%)",
+            mask: "radial-gradient(circle at 50% 50%, transparent 38%, black 39%, black 50%, transparent 51%)",
+          }}
+        />
+      </div>
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.3em] uppercase text-white-smoke/30">
+        Loading geometry
+      </div>
+    </div>
+  );
+}
 
 const IMAGES = {
   spherical:
@@ -166,6 +248,7 @@ function HeroSection() {
                   <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Magnetic>
+
               <Magnetic strength={8}>
                 <Link
                   href="/products"
@@ -193,7 +276,7 @@ function HeroSection() {
               <CornerCrosshair className="bottom-0 left-0 -rotate-90" />
               <CornerCrosshair className="bottom-0 right-0 rotate-180" />
 
-              <BearingHero />
+              <DeferredBearing />
             </motion.div>
           </motion.div>
         </div>
@@ -291,10 +374,10 @@ function ProductShowcase() {
             </h2>
             <p className="text-white-smoke/55 text-sm sm:text-base leading-relaxed">
               Engineered for specific load profiles, speed envelopes and
-              operating environments — backed by application-engineering
-              support.
+              operating environments.
             </p>
           </div>
+
           <a
             href="/products"
             className="flex items-center gap-2 text-white-smoke/80 hover:text-industrial-yellow text-[12px] tracking-[0.2em] uppercase transition-colors group"
@@ -320,10 +403,13 @@ function ProductShowcase() {
             className="group bg-graphite hover:bg-[#1f1f1f] transition-colors"
           >
             <div className="aspect-[4/3] bg-deep-black overflow-hidden relative">
-              <img
+              <Image
                 src={p.img}
                 alt={p.title}
-                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                loading="lazy"
+                className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700"
               />
             </div>
 
