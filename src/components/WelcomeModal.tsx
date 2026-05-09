@@ -8,11 +8,13 @@ import { useEnquiry } from "./EnquiryModal";
 import { ArrowForward } from "./Icons";
 
 const STORAGE_KEY = "glz:welcome:v1";
-const SHOW_DELAY_MS = 1400;
+const SCROLL_TRIGGER_PX = 600;
 
 /**
  * First-visit welcome modal. Shows once per browser (localStorage flag),
- * after a short delay so it doesn't pop immediately on load.
+ * triggered when the user scrolls past SCROLL_TRIGGER_PX — which means
+ * (a) it never blocks the initial render / Lighthouse audit, and
+ * (b) it only appears after the user has shown engagement.
  *
  * Reset the flag from devtools with:
  *   localStorage.removeItem('glz:welcome:v1')
@@ -28,8 +30,17 @@ export default function WelcomeModal() {
     } catch {
       return;
     }
-    const t = window.setTimeout(() => setOpen(true), SHOW_DELAY_MS);
-    return () => window.clearTimeout(t);
+    let triggered = false;
+    const onScroll = () => {
+      if (triggered) return;
+      if (window.scrollY > SCROLL_TRIGGER_PX) {
+        triggered = true;
+        setOpen(true);
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   function dismiss() {

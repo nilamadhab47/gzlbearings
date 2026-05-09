@@ -23,6 +23,7 @@ import Footer from "./components/Footer";
 import Link from "next/link";
 import { useEnquiry } from "./components/EnquiryModal";
 import Magnetic from "./components/Magnetic";
+import LazyMount from "./components/LazyMount";
 import WorldNetwork from "./components/WorldNetwork";
 
 // 3D bearing — client-only, no SSR (uses canvas/WebGL).
@@ -152,11 +153,21 @@ export default function App() {
       <main className="flex-grow">
         <HeroSection />
         <IndustryStrip />
-        <ProductShowcase />
-        <ProcessSection />
-        <ValuesSection />
-        <NetworkSection />
-        <CtaBanner />
+        <LazyMount minHeight="700px">
+          <ProductShowcase />
+        </LazyMount>
+        <LazyMount minHeight="600px">
+          <ProcessSection />
+        </LazyMount>
+        <LazyMount minHeight="500px">
+          <ValuesSection />
+        </LazyMount>
+        <LazyMount minHeight="600px">
+          <NetworkSection />
+        </LazyMount>
+        <LazyMount minHeight="400px">
+          <CtaBanner />
+        </LazyMount>
       </main>
       <Footer />
     </div>
