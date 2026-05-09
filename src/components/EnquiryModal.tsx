@@ -10,6 +10,7 @@ import {
 } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowForward } from "./Icons";
+import { siteConfig } from "@/src/lib/siteConfig";
 
 export type EnquiryTopic =
   | "Quote"
@@ -340,10 +341,10 @@ export default function EnquiryProvider({
                       Something went wrong sending your enquiry. Please try
                       again or email{" "}
                       <a
-                        href="mailto:engineering@glzbearings.com"
+                        href={`mailto:${siteConfig.contact.email}`}
                         className="underline"
                       >
-                        engineering@glzbearings.com
+                        {siteConfig.contact.email}
                       </a>
                       .
                     </div>

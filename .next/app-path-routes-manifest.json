@@ -1,0 +1,12 @@
+{
+  "/robots.txt/route": "/robots.txt",
+  "/apple-icon.png/route": "/apple-icon.png",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/icon.png/route": "/icon.png",
+  "/_not-found/page": "/_not-found",
+  "/api/enquiry/route": "/api/enquiry",
+  "/page": "/",
+  "/products/page": "/products",
+  "/twitter-image/route": "/twitter-image",
+  "/opengraph-image/route": "/opengraph-image"
+}

@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, ArrowForward } from "./Icons";
 import Logo from "./Logo";
 import { useEnquiry } from "./EnquiryModal";
+import { siteConfig } from "@/src/lib/siteConfig";
+import { getWhatsAppUrl } from "@/src/lib/whatsapp";
 
 const LINKS: { label: string; href: string }[] = [
   { label: "Products", href: "/products" },
@@ -94,10 +96,27 @@ export default function MobileNav() {
                   <div className="text-[10px] tracking-[0.25em] text-white-smoke/40 uppercase mb-3">
                     Get in touch
                   </div>
-                  <div className="text-[12px] text-white-smoke/60 leading-relaxed">
-                    engineering@glzbearings.com
-                    <br />
-                    +91 20 4000 1234
+                  <div className="text-[12px] text-white-smoke/60 leading-relaxed space-y-1">
+                    <a
+                      href={`mailto:${siteConfig.contact.email}`}
+                      className="block hover:text-white-smoke transition-colors"
+                    >
+                      {siteConfig.contact.email}
+                    </a>
+                    <a
+                      href={`tel:${siteConfig.contact.phone}`}
+                      className="block hover:text-white-smoke transition-colors"
+                    >
+                      {siteConfig.contact.phoneDisplay}
+                    </a>
+                    <a
+                      href={getWhatsAppUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-industrial-yellow/90 hover:text-industrial-yellow transition-colors"
+                    >
+                      Chat on WhatsApp →
+                    </a>
                   </div>
                 </div>
               </nav>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import { useEnquiry } from "./EnquiryModal";
 import { siteConfig } from "@/src/lib/siteConfig";
+import { getWhatsAppUrl } from "@/src/lib/whatsapp";
 
 export default function Footer() {
   const enquiry = useEnquiry();
@@ -54,16 +55,26 @@ export default function Footer() {
             <div className="text-[12px] text-white-smoke/40 leading-relaxed not-italic">
               <div className="mb-1">{siteConfig.legalName}</div>
               <div>{siteConfig.contact.address.street}</div>
+              <div>{siteConfig.contact.address.locality}</div>
               <div>
-                {siteConfig.contact.address.locality},{" "}
-                {siteConfig.contact.address.region}
+                {siteConfig.contact.address.region} {siteConfig.contact.address.postalCode}, India
               </div>
               <div className="mt-2">
                 <a
-                  href={`tel:${siteConfig.contact.phone.replace(/\s+/g, "")}`}
+                  href={`tel:${siteConfig.contact.phone}`}
                   className="hover:text-white-smoke transition-colors"
                 >
-                  {siteConfig.contact.phone}
+                  {siteConfig.contact.phoneDisplay}
+                </a>
+              </div>
+              <div>
+                <a
+                  href={getWhatsAppUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white-smoke transition-colors"
+                >
+                  WhatsApp · {siteConfig.contact.phoneDisplay}
                 </a>
               </div>
               <div>
@@ -99,7 +110,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-steel/15 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 text-[11px] text-white-smoke/35">
-          <div>© 2026 GLZ Bearings International. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved. · GSTIN {siteConfig.gstin}</div>
           <div className="flex gap-5 md:gap-6">
             <a href="#" className="hover:text-white-smoke transition-colors">
               Terms

@@ -5,6 +5,7 @@ import EnquiryProvider from "@/src/components/EnquiryModal";
 import WelcomeModal from "@/src/components/WelcomeModal";
 import MouseSpotlight from "@/src/components/MouseSpotlight";
 import CustomCursor from "@/src/components/CustomCursor";
+import WhatsAppFab from "@/src/components/WhatsAppFab";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -19,8 +20,17 @@ export const metadata: Metadata = {
   creator: siteConfig.legalName,
   publisher: siteConfig.legalName,
   category: "industrial",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   alternates: {
     canonical: "/",
+    languages: {
+      "en-US": "/",
+      "x-default": "/",
+    },
   },
   openGraph: {
     type: "website",
@@ -29,20 +39,11 @@ export const metadata: Metadata = {
     description: siteConfig.shortDescription,
     url: siteConfig.url,
     locale: siteConfig.locale,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.shortDescription,
-    images: [siteConfig.ogImage],
   },
   robots: {
     index: true,
@@ -55,14 +56,8 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/logo.png", type: "image/png" },
-    ],
-    apple: "/logo.png",
-  },
   manifest: "/site.webmanifest",
+  referrer: "strict-origin-when-cross-origin",
 };
 
 export const viewport: Viewport = {
@@ -76,29 +71,71 @@ export const viewport: Viewport = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${siteConfig.url}/#organization`,
   name: siteConfig.legalName,
-  alternateName: siteConfig.name,
+  alternateName: [siteConfig.name, "GZL Bearings"],
   url: siteConfig.url,
-  logo: `${siteConfig.url}/logo.png`,
+  logo: {
+    "@type": "ImageObject",
+    url: `${siteConfig.url}/logo.png`,
+    width: 612,
+    height: 627,
+  },
+  image: `${siteConfig.url}/logo.png`,
   email: siteConfig.contact.email,
   telephone: siteConfig.contact.phone,
+  foundingDate: String(siteConfig.foundingYear),
+  slogan: siteConfig.tagline,
+  description: siteConfig.description,
   address: {
     "@type": "PostalAddress",
     streetAddress: siteConfig.contact.address.street,
     addressLocality: siteConfig.contact.address.locality,
     addressRegion: siteConfig.contact.address.region,
+    postalCode: siteConfig.contact.address.postalCode,
     addressCountry: siteConfig.contact.address.country,
   },
-  sameAs: [siteConfig.social.linkedin],
-  description: siteConfig.description,
+  vatID: siteConfig.gstin,
+  taxID: siteConfig.gstin,
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      email: siteConfig.contact.email,
+      telephone: siteConfig.contact.phone,
+      areaServed: ["IN", "US", "EU", "GB", "JP", "CN", "AE", "AU", "ZA", "BR"],
+      availableLanguage: ["en"],
+    },
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      telephone: siteConfig.contact.phone,
+      url: `https://wa.me/${siteConfig.contact.whatsapp}`,
+      availableLanguage: ["en"],
+    },
+  ],
+  knowsAbout: [
+    "Industrial Bearings",
+    "Spherical Roller Bearings",
+    "Cylindrical Roller Bearings",
+    "Tapered Roller Bearings",
+    "Angular Contact Bearings",
+    "Aerospace Engineering",
+    "Wind Energy",
+    "Heavy Machinery",
+  ],
+  sameAs: [siteConfig.social.linkedin, `https://wa.me/${siteConfig.contact.whatsapp}`],
 };
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${siteConfig.url}/#website`,
   name: siteConfig.name,
   url: siteConfig.url,
   description: siteConfig.shortDescription,
+  inLanguage: "en-US",
+  publisher: { "@id": `${siteConfig.url}/#organization` },
 };
 
 export default function RootLayout({
@@ -113,6 +150,7 @@ export default function RootLayout({
           <MouseSpotlight />
           <CustomCursor />
           {children}
+          <WhatsAppFab />
           <WelcomeModal />
         </EnquiryProvider>
         <script
