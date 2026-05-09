@@ -48,13 +48,32 @@ function DeferredBearing() {
       typeof globalThis & {
         requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
       };
-    const trigger = () => setShow(true);
-    if (typeof w.requestIdleCallback === "function") {
-      w.requestIdleCallback(trigger, { timeout: 1500 });
+    let cancelled = false;
+    const trigger = () => {
+      if (!cancelled) setShow(true);
+    };
+
+    // Wait until the page has fully loaded AND the browser is idle.
+    // This keeps the heavy three.js + drei chunk out of the
+    // Lighthouse audit's "blocking" window entirely.
+    const onLoad = () => {
+      if (typeof w.requestIdleCallback === "function") {
+        w.requestIdleCallback(trigger, { timeout: 4000 });
+      } else {
+        window.setTimeout(trigger, 2000);
+      }
+    };
+
+    if (document.readyState === "complete") {
+      onLoad();
     } else {
-      const id = window.setTimeout(trigger, 600);
-      return () => window.clearTimeout(id);
+      window.addEventListener("load", onLoad, { once: true });
     }
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", onLoad);
+    };
   }, []);
   if (!show) {
     return <BearingPlaceholder />;

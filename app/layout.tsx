@@ -2,10 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { siteConfig } from "@/src/lib/siteConfig";
 import EnquiryProvider from "@/src/components/EnquiryModal";
-import WelcomeModal from "@/src/components/WelcomeModal";
-import MouseSpotlight from "@/src/components/MouseSpotlight";
-import CustomCursor from "@/src/components/CustomCursor";
-import WhatsAppFab from "@/src/components/WhatsAppFab";
+import DeferredChrome from "@/src/components/DeferredChrome";
 import Analytics from "@/src/components/Analytics";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -156,11 +153,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <EnquiryProvider>
-          <MouseSpotlight />
-          <CustomCursor />
           {children}
-          <WhatsAppFab />
-          <WelcomeModal />
+          <DeferredChrome />
         </EnquiryProvider>
         <script
           type="application/ld+json"
