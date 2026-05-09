@@ -49,6 +49,38 @@ const breadcrumbJsonLd = {
   ],
 };
 
+const PRODUCT_NAMES = [
+  "Deep Groove Ball Bearing",
+  "Angular Contact Ball Bearing",
+  "Stainless Ball Bearing",
+  "Spherical Roller Bearing",
+  "Cylindrical Roller Bearing",
+  "Tapered Roller Bearing",
+  "Needle Roller Bearing",
+  "Thrust Bearing",
+  "Ceramic Hybrid Bearing",
+];
+
+const itemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "GLZ Bearings — Product Catalogue",
+  itemListOrder: "https://schema.org/ItemListUnordered",
+  numberOfItems: PRODUCT_NAMES.length,
+  itemListElement: PRODUCT_NAMES.map((name, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Product",
+      name,
+      brand: { "@type": "Brand", name: siteConfig.name },
+      manufacturer: { "@id": `${siteConfig.url}/#organization` },
+      category: "Industrial Bearings",
+      url: `${siteConfig.url}/products`,
+    },
+  })),
+};
+
 export default function Page() {
   return (
     <>
@@ -57,6 +89,11 @@ export default function Page() {
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
     </>
   );

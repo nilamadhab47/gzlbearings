@@ -1,8 +1,8 @@
 {
   "/robots.txt/route": "/robots.txt",
-  "/apple-icon.png/route": "/apple-icon.png",
-  "/sitemap.xml/route": "/sitemap.xml",
   "/icon.png/route": "/icon.png",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/apple-icon.png/route": "/apple-icon.png",
   "/_not-found/page": "/_not-found",
   "/api/enquiry/route": "/api/enquiry",
   "/page": "/",

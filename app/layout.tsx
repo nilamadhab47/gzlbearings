@@ -6,6 +6,9 @@ import WelcomeModal from "@/src/components/WelcomeModal";
 import MouseSpotlight from "@/src/components/MouseSpotlight";
 import CustomCursor from "@/src/components/CustomCursor";
 import WhatsAppFab from "@/src/components/WhatsAppFab";
+import Analytics from "@/src/components/Analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -58,6 +61,12 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   referrer: "strict-origin-when-cross-origin",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+      : undefined,
+  },
 };
 
 export const viewport: Viewport = {
@@ -70,7 +79,7 @@ export const viewport: Viewport = {
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": ["Organization", "Manufacturer"],
   "@id": `${siteConfig.url}/#organization`,
   name: siteConfig.legalName,
   alternateName: [siteConfig.name, "GZL Bearings"],
@@ -167,6 +176,9 @@ export default function RootLayout({
             __html: JSON.stringify(websiteJsonLd),
           }}
         />
+        <Analytics />
+        <VercelAnalytics />
+        <SpeedInsights />
       </body>
     </html>
   );
