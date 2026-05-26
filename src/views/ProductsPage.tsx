@@ -1,7 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 "use client";
 
 import { useMemo, useState } from "react";
@@ -15,158 +11,19 @@ import {
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
 import { useEnquiry } from "@/src/components/EnquiryModal";
+import {
+  PRODUCTS,
+  CATALOGUE_PUBLIC_PATH,
+  type BearingType,
+  type LoadClass,
+  type Product,
+  type SpeedClass,
+} from "@/src/lib/products";
 
 /* -------------------------------------------------------------------------- */
-/*  Types & Data                                                               */
+/*  Local UI types                                                             */
 /* -------------------------------------------------------------------------- */
-type BearingType = "Ball" | "Roller" | "Specialty";
-type SpeedClass = "High" | "Medium" | "Standard";
-type LoadClass = "Heavy" | "Medium" | "Light";
 type Tab = "All" | "HighSpeed" | "HeavyLoad" | "Corrosion";
-
-type Product = {
-  slug: string;
-  name: string;
-  type: BearingType;
-  speed: SpeedClass;
-  load: LoadClass;
-  material: string;
-  tempRange: string;
-  corrosionResistant: boolean;
-  desc: string;
-  applications: string[];
-  img: string;
-  availability: "In Stock" | "Made to Order";
-};
-
-const PRODUCTS: Product[] = [
-  {
-    slug: "deep-groove-ball",
-    name: "Deep Groove Ball Bearing",
-    type: "Ball",
-    speed: "High",
-    load: "Medium",
-    material: "Chrome Steel",
-    tempRange: "−40 to 150 °C",
-    corrosionResistant: false,
-    desc: "Versatile single-row design handling combined radial and moderate axial loads with low friction and quiet running.",
-    applications: ["Electric motors", "Pumps", "Appliances"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDwUqSSUjZ3z1imOpmCMsdsWu2ChLseUUKYobkgrC_wcC15JcR5_lhsEl7UyfRzkUweHiOUOLtywkKOVJ8J9tKqgRB2FQ3W4qNm8yA6Wzvq15PWOdjiAj8i8Wn0TGLfYpUWU-lJM8PIqqaOjh9lVNhMNnl590gb1fJK59ty85l4xmz8r6zuJgEqEFS_Gv1sslwaUfA0BeEQjA6gywwbn72lILgmnKadbIcxoxA8AC7baGjpig4zVkjXnd5mV0eJn8XZWmfC-BVMiA",
-    availability: "In Stock",
-  },
-  {
-    slug: "angular-contact",
-    name: "Angular Contact Ball Bearing",
-    type: "Ball",
-    speed: "High",
-    load: "Medium",
-    material: "Chrome Steel",
-    tempRange: "−30 to 150 °C",
-    corrosionResistant: false,
-    desc: "Raceways arranged to support combined radial and thrust loads — purpose-built for spindle and gear applications.",
-    applications: ["Machine tool spindles", "Gearboxes", "Pumps"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCoPsW7IoqZqvfqBwmJh0p1zP1V1pwJx1bx7cl1toSlh6NVeqbqtobvGzJgpdy0I_CFBfzx8TeAIsQt16BpNb6CCnfHZ3QFjNte6AGU62zYQGzRosMRp41XiNWZCMCsPSe_QBztp9HCu2PlCwaBWXVihBhYJ16McxizPuqNvFxrzpHrPJ7P4tZJPqZUHr46UXg30Crrb3DowvEkKYoF0dyREOodqY3qK_J8_-kvOTquLURU2WxUVVEElT8fMm6dEQGa8y87ZBpyJg",
-    availability: "In Stock",
-  },
-  {
-    slug: "stainless-ball",
-    name: "Stainless Ball Bearing",
-    type: "Ball",
-    speed: "High",
-    load: "Light",
-    material: "440C Stainless",
-    tempRange: "−40 to 200 °C",
-    corrosionResistant: true,
-    desc: "Stainless rings and rolling elements for wet, washdown and corrosive environments without sacrificing precision.",
-    applications: ["Food & beverage", "Medical", "Marine"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkfhZmgJqJ0gO-GN76x-ywhzLv0ys8cQt6EPNAHyqrOOG6diZEZexMEk1cw1aWQ05M3PGfqqB9UMDMWMNzMMxpjB3BwbxTAYRdWWYfXskpQjuJpL2GJgJ3a1vedYrFg2BEcc-KFwNdffJXTdROC5g5ZsdWyw7Hoj9zfWl6CB2qWvlH37YOjFGRsoS8eYZIua3P2ZebxPbQqWpnxiI5sn6rU7X6sJJo-X1MdQD-k6Mtmkh2hX7lRcbFo7wosyxuirMlmb6A9PzPcg",
-    availability: "Made to Order",
-  },
-  {
-    slug: "spherical-roller",
-    name: "Spherical Roller Bearing",
-    type: "Roller",
-    speed: "Medium",
-    load: "Heavy",
-    material: "Carburised Steel",
-    tempRange: "−30 to 200 °C",
-    corrosionResistant: false,
-    desc: "Self-aligning two-row design absorbing the heaviest radial loads, shock loads and shaft deflection with composure.",
-    applications: ["Mining", "Paper mills", "Marine propulsion"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDwUqSSUjZ3z1imOpmCMsdsWu2ChLseUUKYobkgrC_wcC15JcR5_lhsEl7UyfRzkUweHiOUOLtywkKOVJ8J9tKqgRB2FQ3W4qNm8yA6Wzvq15PWOdjiAj8i8Wn0TGLfYpUWU-lJM8PIqqaOjh9lVNhMNnl590gb1fJK59ty85l4xmz8r6zuJgEqEFS_Gv1sslwaUfA0BeEQjA6gywwbn72lILgmnKadbIcxoxA8AC7baGjpig4zVkjXnd5mV0eJn8XZWmfC-BVMiA",
-    availability: "In Stock",
-  },
-  {
-    slug: "cylindrical-roller",
-    name: "Cylindrical Roller Bearing",
-    type: "Roller",
-    speed: "High",
-    load: "Heavy",
-    material: "Through-Hardened Steel",
-    tempRange: "−30 to 180 °C",
-    corrosionResistant: false,
-    desc: "High radial capacity with separable design — engineered for rotational rigidity at speed in heavy-duty drivelines.",
-    applications: ["Gearboxes", "Traction motors", "Compressors"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCoPsW7IoqZqvfqBwmJh0p1zP1V1pwJx1bx7cl1toSlh6NVeqbqtobvGzJgpdy0I_CFBfzx8TeAIsQt16BpNb6CCnfHZ3QFjNte6AGU62zYQGzRosMRp41XiNWZCMCsPSe_QBztp9HCu2PlCwaBWXVihBhYJ16McxizPuqNvFxrzpHrPJ7P4tZJPqZUHr46UXg30Crrb3DowvEkKYoF0dyREOodqY3qK_J8_-kvOTquLURU2WxUVVEElT8fMm6dEQGa8y87ZBpyJg",
-    availability: "In Stock",
-  },
-  {
-    slug: "tapered-roller",
-    name: "Tapered Roller Bearing",
-    type: "Roller",
-    speed: "Medium",
-    load: "Heavy",
-    material: "Case-Hardened Steel",
-    tempRange: "−30 to 180 °C",
-    corrosionResistant: false,
-    desc: "Optimised for combined radial and axial loads — the workhorse of automotive driveline and heavy machinery.",
-    applications: ["Automotive wheels", "Industrial drives", "Construction"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkfhZmgJqJ0gO-GN76x-ywhzLv0ys8cQt6EPNAHyqrOOG6diZEZexMEk1cw1aWQ05M3PGfqqB9UMDMWMNzMMxpjB3BwbxTAYRdWWYfXskpQjuJpL2GJgJ3a1vedYrFg2BEcc-KFwNdffJXTdROC5g5ZsdWyw7Hoj9zfWl6CB2qWvlH37YOjFGRsoS8eYZIua3P2ZebxPbQqWpnxiI5sn6rU7X6sJJo-X1MdQD-k6Mtmkh2hX7lRcbFo7wosyxuirMlmb6A9PzPcg",
-    availability: "In Stock",
-  },
-  {
-    slug: "needle-roller",
-    name: "Needle Roller Bearing",
-    type: "Roller",
-    speed: "Medium",
-    load: "Medium",
-    material: "Chrome Steel",
-    tempRange: "−30 to 150 °C",
-    corrosionResistant: false,
-    desc: "Slim cross-section with high radial capacity — chosen where shaft envelope is constrained without compromise on load.",
-    applications: ["Transmissions", "Connecting rods", "Compact drives"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDwUqSSUjZ3z1imOpmCMsdsWu2ChLseUUKYobkgrC_wcC15JcR5_lhsEl7UyfRzkUweHiOUOLtywkKOVJ8J9tKqgRB2FQ3W4qNm8yA6Wzvq15PWOdjiAj8i8Wn0TGLfYpUWU-lJM8PIqqaOjh9lVNhMNnl590gb1fJK59ty85l4xmz8r6zuJgEqEFS_Gv1sslwaUfA0BeEQjA6gywwbn72lILgmnKadbIcxoxA8AC7baGjpig4zVkjXnd5mV0eJn8XZWmfC-BVMiA",
-    availability: "Made to Order",
-  },
-  {
-    slug: "thrust-bearing",
-    name: "Thrust Bearing",
-    type: "Specialty",
-    speed: "Medium",
-    load: "Heavy",
-    material: "Through-Hardened Steel",
-    tempRange: "−30 to 180 °C",
-    corrosionResistant: false,
-    desc: "Engineered for pure axial loads. Available in ball, cylindrical and spherical roller configurations on request.",
-    applications: ["Vertical pumps", "Gear drives", "Crane hooks"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCoPsW7IoqZqvfqBwmJh0p1zP1V1pwJx1bx7cl1toSlh6NVeqbqtobvGzJgpdy0I_CFBfzx8TeAIsQt16BpNb6CCnfHZ3QFjNte6AGU62zYQGzRosMRp41XiNWZCMCsPSe_QBztp9HCu2PlCwaBWXVihBhYJ16McxizPuqNvFxrzpHrPJ7P4tZJPqZUHr46UXg30Crrb3DowvEkKYoF0dyREOodqY3qK_J8_-kvOTquLURU2WxUVVEElT8fMm6dEQGa8y87ZBpyJg",
-    availability: "In Stock",
-  },
-  {
-    slug: "ceramic-hybrid",
-    name: "Ceramic Hybrid Bearing",
-    type: "Specialty",
-    speed: "High",
-    load: "Light",
-    material: "Silicon Nitride / Steel",
-    tempRange: "−50 to 200 °C",
-    corrosionResistant: true,
-    desc: "Steel rings with silicon nitride rolling elements — lower friction, higher speed, immunity to electrical erosion.",
-    applications: ["High-speed spindles", "Vacuum", "Specialty motors"],
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCkfhZmgJqJ0gO-GN76x-ywhzLv0ys8cQt6EPNAHyqrOOG6diZEZexMEk1cw1aWQ05M3PGfqqB9UMDMWMNzMMxpjB3BwbxTAYRdWWYfXskpQjuJpL2GJgJ3a1vedYrFg2BEcc-KFwNdffJXTdROC5g5ZsdWyw7Hoj9zfWl6CB2qWvlH37YOjFGRsoS8eYZIua3P2ZebxPbQqWpnxiI5sn6rU7X6sJJo-X1MdQD-k6Mtmkh2hX7lRcbFo7wosyxuirMlmb6A9PzPcg",
-    availability: "Made to Order",
-  },
-];
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "All", label: "All Products" },
@@ -802,21 +659,37 @@ function EmptyState({ onReset }: { onReset: () => void }) {
 /*  Technical Resources                                                        */
 /* -------------------------------------------------------------------------- */
 function ResourcesSection() {
-  const items = [
+  const enquiry = useEnquiry();
+  const items: {
+    title: string;
+    desc: string;
+    cta: string;
+    href?: string;
+    download?: boolean;
+    onClick?: () => void;
+  }[] = [
     {
       title: "Product Brochure",
       desc: "Comprehensive overview of every category, configuration and application area.",
       cta: "Download Brochure",
+      href: CATALOGUE_PUBLIC_PATH,
+      download: true,
     },
     {
       title: "CAD Library",
       desc: "Drop-in 2D drawings and 3D models for direct integration into your assemblies.",
       cta: "Browse CAD Library",
+      onClick: () =>
+        enquiry.open({
+          topic: "Engineering",
+          message: "I'd like access to CAD drawings / 3D models for ",
+        }),
     },
     {
       title: "Engineering Support",
       desc: "Speak with our application engineers to specify the right bearing for your operating envelope.",
       cta: "Contact Engineering",
+      onClick: () => enquiry.open({ topic: "Engineering" }),
     },
   ];
 
@@ -850,13 +723,27 @@ function ResourcesSection() {
               <p className="text-white-smoke/55 text-sm leading-relaxed mb-8">
                 {it.desc}
               </p>
-              <a
-                href="#"
-                className="inline-flex items-center gap-2 text-industrial-yellow text-[12px] tracking-[0.18em] uppercase font-semibold hover:text-white-smoke transition-colors"
-              >
-                {it.cta}
-                <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
+              {it.href ? (
+                <a
+                  href={it.href}
+                  download={it.download ? "" : undefined}
+                  target={it.download ? "_blank" : undefined}
+                  rel={it.download ? "noopener noreferrer" : undefined}
+                  className="inline-flex items-center gap-2 text-industrial-yellow text-[12px] tracking-[0.18em] uppercase font-semibold hover:text-white-smoke transition-colors"
+                >
+                  {it.cta}
+                  <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={it.onClick}
+                  className="inline-flex items-center gap-2 text-industrial-yellow text-[12px] tracking-[0.18em] uppercase font-semibold hover:text-white-smoke transition-colors"
+                >
+                  {it.cta}
+                  <ArrowForward className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              )}
             </motion.div>
           ))}
         </div>

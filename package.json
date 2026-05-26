@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "next dev -p 3000",
+    "prebuild": "tsx scripts/gen-catalogue.ts",
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
-    "gen:images": "tsx scripts/gen-images.ts"
+    "gen:images": "tsx scripts/gen-images.ts",
+    "gen:catalogue": "tsx scripts/gen-catalogue.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
@@ -18,12 +20,17 @@
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "next": "^15.1.0",
+    "pdfkit": "^0.18.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.12.4",
     "three": "^0.184.0"
   },
   "devDependencies": {
+    "@fontsource/bebas-neue": "^5.2.7",
+    "@fontsource/inter": "^5.2.8",
     "@types/node": "^22.14.0",
+    "@types/pdfkit": "^0.17.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.184.1",

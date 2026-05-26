@@ -5,10 +5,14 @@ import Logo from "./Logo";
 import { useEnquiry } from "./EnquiryModal";
 import { siteConfig } from "@/src/lib/siteConfig";
 import { getWhatsAppUrl } from "@/src/lib/whatsapp";
+import { CATALOGUE_PUBLIC_PATH } from "@/src/lib/products";
 
 export default function Footer() {
   const enquiry = useEnquiry();
-  const cols: { title: string; links: { label: string; href: string }[] }[] = [
+  const cols: {
+    title: string;
+    links: { label: string; href: string; external?: boolean; download?: boolean }[];
+  }[] = [
     {
       title: "Products",
       links: [
@@ -32,7 +36,12 @@ export default function Footer() {
     {
       title: "Resources",
       links: [
-        { label: "Product Brochure", href: "#" },
+        {
+          label: "Product Catalogue (PDF)",
+          href: CATALOGUE_PUBLIC_PATH,
+          external: true,
+          download: true,
+        },
         { label: "CAD Library", href: "#" },
         { label: "Datasheets", href: "#" },
         { label: "Contact", href: "#" },
@@ -96,12 +105,24 @@ export default function Footer() {
               <ul className="space-y-3 text-[13px] text-white-smoke/50">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      className="hover:text-white-smoke transition-colors"
-                    >
-                      {l.label}
-                    </Link>
+                    {l.external ? (
+                      <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download={l.download ? "" : undefined}
+                        className="hover:text-white-smoke transition-colors"
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={l.href}
+                        className="hover:text-white-smoke transition-colors"
+                      >
+                        {l.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
